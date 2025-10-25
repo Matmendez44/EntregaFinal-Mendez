@@ -1,15 +1,25 @@
-const productos = [
-  { id: 1, nombre: "Mouse", precio: 5000 },
-  { id: 2, nombre: "Teclado", precio: 8000 },
-  { id: 3, nombre: "Monitor", precio: 55000 }
-];
-
+let productos = []; 
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
 const listaProductos = document.getElementById("lista-productos");
 const listaCarrito = document.getElementById("lista-carrito");
 const totalCarrito = document.getElementById("total");
-const btnVaciar = document.getElementById("vaciarCarrito"); // <-- Esta línea define la variable
+const btnVaciar = document.getElementById("vaciarCarrito");
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarProductos();
+  renderCarrito();
+});
+
+async function cargarProductos() {
+  try {
+    const response = await fetch('productos.json');
+    productos = await response.json();
+    renderProductos();
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+  }
+}
 
 function renderProductos() {
   listaProductos.innerHTML = "";
@@ -63,7 +73,6 @@ function eliminarDelCarrito(index) {
   renderCarrito();
 }
 
-// <-- Este bloque debe ir DESPUÉS de definir btnVaciar
 btnVaciar.addEventListener("click", () => {
   Swal.fire({
     title: '¿Estás seguro?',
@@ -87,6 +96,3 @@ btnVaciar.addEventListener("click", () => {
     }
   });
 });
-
-renderProductos();
-renderCarrito();
